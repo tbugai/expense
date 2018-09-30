@@ -1,6 +1,6 @@
-# GO + Vue.JS Project Template
+# Expense Tracker
 
-This is a template for working with a Vue.js frontend and a GO backend.  It simplifies the development process by providing code recompiling and execution for the GO backend as well as HOT code reloading for the Vue.js frontend.
+This is a simple expense tracking application built upon the [GO + Vue.js](https://github.com/tbugai/go-vue-template) template project.
 
 ## Dependencies
 
