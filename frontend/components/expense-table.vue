@@ -15,7 +15,7 @@ export default {
     return {
       headers: [
         { text: 'Description', value: 'description' },
-        { text: 'Amount', value: 'amount' }
+        { text: 'Amount', value: 'amount', width: 200 }
       ],
     }
   },
