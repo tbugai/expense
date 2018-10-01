@@ -1,6 +1,5 @@
 <template>
   <v-app>
-  <v-navigation-drawer temporary></v-navigation-drawer>
   <v-toolbar app>
     <v-toolbar-title>Expense</v-toolbar-title>
   </v-toolbar>

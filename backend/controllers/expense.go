@@ -8,7 +8,7 @@ import (
   "github.com/labstack/echo"
   "github.com/jinzhu/gorm"
 
-  "expense/models"
+  "expense/backend/models"
 )
 
 type H map[string]interface{}

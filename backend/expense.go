@@ -1,11 +1,12 @@
-package main
+package backend
 
 import (
   "fmt"
   "os"
+  "strconv"
 
-  "expense/models"
-  "expense/controllers"
+  "expense/backend/models"
+  "expense/backend/controllers"
 
   "github.com/joho/godotenv"
   "github.com/labstack/echo"
@@ -17,7 +18,13 @@ import (
 var db *gorm.DB
 var err error
 
-func main() {
+type Server struct {
+  Port int64
+  Echo *echo.Echo
+  DB *gorm.DB
+}
+
+func (s Server) Serve() {
   err = godotenv.Load()
   if err != nil {
     fmt.Print(err)
@@ -30,25 +37,25 @@ func main() {
 
   dbUri := fmt.Sprintf("host=%s user=%s dbname=%s sslmode=disable password=%s", dbHost, dbUser, dbName, dbPass)
 
-  db, err = gorm.Open("postgres", dbUri)
+  s.DB, err = gorm.Open("postgres", dbUri)
 
   if err != nil {
     panic("failed to connect to database")
   }
 
-  db.AutoMigrate(&models.Expense{})
+  s.DB.AutoMigrate(&models.Expense{})
 
-  defer db.Close()
+  defer s.DB.Close()
 
-  e := echo.New()
+  s.Echo = echo.New()
 
-  e.Use(middleware.Logger())
-  e.Use(middleware.Recover())
+  s.Echo.Use(middleware.Logger())
+  s.Echo.Use(middleware.Recover())
 
-  e.GET("/expense", controllers.GetExpenses(db))
-  e.POST("/expense", controllers.CreateExpense(db))
-  e.PUT("/expense/:id", controllers.UpdateExpense(db))
-  e.DELETE("/expense/:id", controllers.DestroyExpense(db))
+  s.Echo.GET("/api/expenses", controllers.GetExpenses(s.DB))
+  s.Echo.POST("/api/expenses", controllers.CreateExpense(s.DB))
+  s.Echo.PUT("/api/expenses/:id", controllers.UpdateExpense(s.DB))
+  s.Echo.DELETE("/api/expenses/:id", controllers.DestroyExpense(s.DB))
 
-  e.Logger.Fatal(e.Start(":8000"))
+  s.Echo.Logger.Fatal(s.Echo.Start(":" + strconv.FormatInt(s.Port, 10)))
 }
